@@ -144,7 +144,7 @@ export default function AboutMe() {
                 </svg>
               </a>
               <a
-                href="https://linkedin.com/in/nishi-m-shah"
+                href="https://www.linkedin.com/in/nishi-shah-a58a47344"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-textLight-secondary dark:text-text-secondary hover:text-accent-primary dark:hover:text-accent-primaryDark transition-all hover:scale-110"
@@ -155,7 +155,7 @@ export default function AboutMe() {
                 </svg>
               </a>
               <a
-                href="mailto:nishimshah@example.com"
+                href="mailto:nishishah0257@gmail.com"
                 className="text-textLight-secondary dark:text-text-secondary hover:text-accent-primary dark:hover:text-accent-primaryDark transition-all hover:scale-110"
                 aria-label="Email"
               >
