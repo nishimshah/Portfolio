@@ -136,6 +136,98 @@ const projects = [
 
 Modal.setAppElement('#root');
 
+// Individual Project Card Component with its own scroll detection
+function ProjectCard({ project, index, onOpenModal }) {
+  const [ref, inView] = useInView({ 
+    threshold: 0.3, 
+    triggerOnce: true 
+  });
+
+  const cardAnimation = useSpring({
+    opacity: inView ? 1 : 0,
+    transform: inView ? 'translateY(0px)' : 'translateY(40px)',
+    config: { tension: 200, friction: 30 }
+  });
+
+  return (
+    <animated.div 
+      ref={ref}
+      style={cardAnimation}
+      className="relative mb-12 md:ml-20"
+    >
+      <div className="absolute -left-[4.5rem] top-8 w-4 h-4 bg-gray-900 dark:bg-white rounded-full border-4 border-white dark:border-dark-surface hidden md:block" />
+
+      <div 
+        className="group bg-white dark:bg-dark-elevated rounded-2xl overflow-hidden border border-gray-200 dark:border-dark-border hover:border-gray-900 dark:hover:border-white hover:shadow-xl transition-all cursor-pointer"
+        onClick={() => onOpenModal(project)}
+      >
+        <div className="md:flex">
+          <div className="md:w-2/5 relative overflow-hidden">
+            <img 
+              src={project.image}
+              alt={project.title}
+              className="w-full h-64 md:h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-gray-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+          </div>
+
+          <div className="md:w-3/5 p-8">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-gray-600 dark:group-hover:text-gray-400 transition-colors">
+              {project.title}
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+              {project.shortDesc}
+            </p>
+
+            <div className="flex flex-wrap gap-2 mb-6">
+              {project.tech.slice(0, 4).map(tech => (
+                <span key={tech} className="px-3 py-1 bg-gray-100 dark:bg-dark-surface text-gray-700 dark:text-gray-300 rounded-lg text-sm font-mono border border-gray-200 dark:border-dark-border">
+                  {tech}
+                </span>
+              ))}
+              {project.tech.length > 4 && (
+                <span className="px-3 py-1 bg-gray-100 dark:bg-dark-surface text-gray-700 dark:text-gray-300 rounded-lg text-sm font-mono border border-gray-200 dark:border-dark-border">
+                  +{project.tech.length - 4}
+                </span>
+              )}
+            </div>
+
+            <div className="flex items-center gap-4">
+              <a 
+                href={project.github}
+                onClick={(e) => e.stopPropagation()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors font-medium"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                Code
+              </a>
+              {project.video && (
+                <a 
+                  href={project.video}
+                  onClick={(e) => e.stopPropagation()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors font-medium"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Demo
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </animated.div>
+  );
+}
+
 export default function Projects() {
   const [ref, inView] = useInView({ threshold: 0.2, triggerOnce: true });
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -148,16 +240,6 @@ export default function Projects() {
     config: { tension: 200, friction: 30 }
   });
 
-  const scroll = (direction) => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = 300;
-      scrollContainerRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
-      });
-    }
-  };
-
   return (
     <section id="projects" ref={ref} className="min-h-screen lg:pl-20 py-24 bg-gray-50 dark:bg-dark-surface">
       <div className="px-6 md:px-12 lg:px-24">
@@ -169,64 +251,78 @@ export default function Projects() {
             A collection of {projects.length} projects showcasing my skills in full-stack development
           </p>
 
-          {/* Desktop Timeline View */}
+          {/* Desktop Timeline View - One by One on Scroll */}
           <div className="hidden md:block relative">
             <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gray-300 dark:bg-dark-border" />
 
             {projects.map((project, idx) => (
-              <div 
+              <ProjectCard 
                 key={idx}
-                className="relative mb-12 md:ml-20"
-              >
-                <div className="absolute -left-[4.5rem] top-8 w-4 h-4 bg-gray-900 dark:bg-white rounded-full border-4 border-white dark:border-dark-surface" />
+                project={project}
+                index={idx}
+                onOpenModal={(project) => {
+                  setSelectedProject(project);
+                  setModalIsOpen(true);
+                }}
+              />
+            ))}
+          </div>
 
-                <div 
-                  className="group bg-white dark:bg-dark-elevated rounded-2xl overflow-hidden border border-gray-200 dark:border-dark-border hover:border-gray-900 dark:hover:border-white hover:shadow-xl transition-all cursor-pointer"
+          {/* Mobile Carousel View - No Arrows, Just Swipe */}
+          <div className="md:hidden relative">
+            <div 
+              ref={scrollContainerRef}
+              className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide px-2 py-2"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {projects.map((project, idx) => (
+                <div
+                  key={idx}
+                  className="flex-shrink-0 w-[85vw] snap-center"
                   onClick={() => {
                     setSelectedProject(project);
                     setModalIsOpen(true);
                   }}
                 >
-                  <div className="md:flex">
-                    <div className="md:w-2/5 relative overflow-hidden">
+                  <div className="bg-white dark:bg-dark-elevated rounded-2xl overflow-hidden border border-gray-200 dark:border-dark-border shadow-lg h-full">
+                    <div className="relative h-48 overflow-hidden">
                       <img 
                         src={project.image}
                         alt={project.title}
-                        className="w-full h-64 md:h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        className="w-full h-full object-cover"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-r from-gray-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
-
-                    <div className="md:w-3/5 p-8">
-                      <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-gray-600 dark:group-hover:text-gray-400 transition-colors">
+                    
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">
                         {project.title}
                       </h3>
-                      <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+                      <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
                         {project.shortDesc}
                       </p>
-
-                      <div className="flex flex-wrap gap-2 mb-6">
-                        {project.tech.slice(0, 4).map(tech => (
-                          <span key={tech} className="px-3 py-1 bg-gray-100 dark:bg-dark-surface text-gray-700 dark:text-gray-300 rounded-lg text-sm font-mono border border-gray-200 dark:border-dark-border">
+                      
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {project.tech.slice(0, 3).map(tech => (
+                          <span key={tech} className="px-2 py-1 bg-gray-100 dark:bg-dark-surface text-gray-700 dark:text-gray-300 rounded text-xs font-mono">
                             {tech}
                           </span>
                         ))}
-                        {project.tech.length > 4 && (
-                          <span className="px-3 py-1 bg-gray-100 dark:bg-dark-surface text-gray-700 dark:text-gray-300 rounded-lg text-sm font-mono border border-gray-200 dark:border-dark-border">
-                            +{project.tech.length - 4}
+                        {project.tech.length > 3 && (
+                          <span className="px-2 py-1 bg-gray-100 dark:bg-dark-surface text-gray-700 dark:text-gray-300 rounded text-xs font-mono">
+                            +{project.tech.length - 3}
                           </span>
                         )}
                       </div>
 
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-3 text-sm">
                         <a 
                           href={project.github}
                           onClick={(e) => e.stopPropagation()}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors font-medium"
+                          className="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                         >
-                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                           </svg>
                           Code
@@ -237,9 +333,9 @@ export default function Projects() {
                             onClick={(e) => e.stopPropagation()}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors font-medium"
+                            className="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                           >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
@@ -250,111 +346,7 @@ export default function Projects() {
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Mobile Carousel View */}
-          <div className="md:hidden relative">
-            <div className="relative">
-              <button
-                onClick={() => scroll('left')}
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-white dark:bg-dark-elevated rounded-full shadow-lg border border-gray-200 dark:border-dark-border"
-                aria-label="Previous"
-              >
-                <svg className="w-6 h-6 text-gray-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-
-              <button
-                onClick={() => scroll('right')}
-                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 bg-white dark:bg-dark-elevated rounded-full shadow-lg border border-gray-200 dark:border-dark-border"
-                aria-label="Next"
-              >
-                <svg className="w-6 h-6 text-gray-900 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-
-              <div 
-                ref={scrollContainerRef}
-                className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide px-2 py-2"
-                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-              >
-                {projects.map((project, idx) => (
-                  <div
-                    key={idx}
-                    className="flex-shrink-0 w-[85vw] snap-center"
-                    onClick={() => {
-                      setSelectedProject(project);
-                      setModalIsOpen(true);
-                    }}
-                  >
-                    <div className="bg-white dark:bg-dark-elevated rounded-2xl overflow-hidden border border-gray-200 dark:border-dark-border shadow-lg h-full">
-                      <div className="relative h-48 overflow-hidden">
-                        <img 
-                          src={project.image}
-                          alt={project.title}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      
-                      <div className="p-6">
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">
-                          {project.title}
-                        </h3>
-                        <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
-                          {project.shortDesc}
-                        </p>
-                        
-                        <div className="flex flex-wrap gap-2 mb-4">
-                          {project.tech.slice(0, 3).map(tech => (
-                            <span key={tech} className="px-2 py-1 bg-gray-100 dark:bg-dark-surface text-gray-700 dark:text-gray-300 rounded text-xs font-mono">
-                              {tech}
-                            </span>
-                          ))}
-                          {project.tech.length > 3 && (
-                            <span className="px-2 py-1 bg-gray-100 dark:bg-dark-surface text-gray-700 dark:text-gray-300 rounded text-xs font-mono">
-                              +{project.tech.length - 3}
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="flex items-center gap-3 text-sm">
-                          <a 
-                            href={project.github}
-                            onClick={(e) => e.stopPropagation()}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-                          >
-                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                            </svg>
-                            Code
-                          </a>
-                          {project.video && (
-                            <a 
-                              href={project.video}
-                              onClick={(e) => e.stopPropagation()}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-                            >
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                              </svg>
-                              Demo
-                            </a>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              ))}
             </div>
 
             <div className="flex justify-center gap-2 mt-6">

@@ -3,7 +3,6 @@ import { useSpring, animated } from '@react-spring/web';
 
 export default function Hero() {
   const [displayedText, setDisplayedText] = useState('');
-  const fullText = 'Full-Stack Developer & ML Enthusiast';
 
   useEffect(() => {
     let index = 0;
@@ -40,9 +39,9 @@ export default function Hero() {
             Nishi M Shah
           </h1>
           
-          <h2 className="text-2xl md:text-4xl font-medium text-gray-600 dark:text-gray-400 mb-8 min-h-[3rem]">
+          {/* <h2 className="text-2xl md:text-4xl font-medium text-gray-600 dark:text-gray-400 mb-8 min-h-[3rem]">
             {displayedText}<span className="animate-pulse text-gray-900 dark:text-white">|</span>
-          </h2>
+          </h2> */}
           
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl leading-relaxed mb-12">
             Computer Science student building innovative web applications with React, Django, and Machine Learning.
