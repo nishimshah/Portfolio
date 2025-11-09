@@ -1,5 +1,4 @@
-
-import { useSpring, animated, useTrail } from '@react-spring/web';
+import { useSpring, useTrail, animated } from '@react-spring/web';
 import { useInView } from 'react-intersection-observer';
 
 const skillsData = {
@@ -37,7 +36,7 @@ const skillsData = {
     { name: 'Git', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg' },
     { name: 'GitHub', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg' },
     { name: 'VS Code', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg' },
-    { name: 'VS Code 2022', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/visualstudio/visualstudio-plain.svg' }
+    { name: 'Docker', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg' }
   ]
 };
 
@@ -53,17 +52,21 @@ export default function TechStack() {
   return (
     <section id="tech" ref={ref} className="min-h-screen px-6 max-w-7xl mx-auto py-24 bg-light-bg dark:bg-dark-bg">
       <animated.div style={headerSpring}>
-        <h2 className="text-3xl font-bold text-textLight-heading dark:text-text-heading mb-4 flex items-center justify-center md:justify-start">
-          <span className="text-accent-primary dark:text-accent-primaryDark font-mono mr-2">02.</span>
-          Technologies I Work With
-          <div className="ml-4 h-px bg-border-light dark:bg-border-dark flex-grow max-w-xs hidden md:block" />
-        </h2>
-        <p className="text-textLight-secondary dark:text-text-secondary mb-16 text-center md:text-left">
-          Technologies and tools I use to build amazing products
+        <div className="flex items-center gap-4 mb-4">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 bg-accent-primary dark:bg-accent-primaryDark rounded-full animate-pulse"></span>
+            <h2 className="text-3xl font-bold text-textLight-heading dark:text-text-heading">
+              Technologies
+            </h2>
+          </div>
+          <div className="h-px bg-border-light dark:bg-border-dark flex-grow max-w-md"></div>
+        </div>
+        <p className="text-textLight-secondary dark:text-text-secondary mb-16">
+          Tools and technologies I use to bring ideas to life
         </p>
       </animated.div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
         {Object.entries(skillsData).map(([category, skills], idx) => (
           <SkillCategory 
             key={category} 
@@ -82,19 +85,17 @@ export default function TechStack() {
           delay: 600,
           config: { tension: 200, friction: 30 }
         })}
-        className="bg-gradient-to-br from-light-card to-light-elevated dark:from-dark-card dark:to-dark-elevated border border-accent-primary/20 dark:border-accent-primaryDark/20 rounded-2xl p-8 shadow-lg hover:shadow-accent-primary/10 transition-all"
+        className="bg-gradient-to-br from-accent-sage/10 to-accent-sand/20 dark:from-accent-sage/5 dark:to-accent-primary/5 border border-accent-sage/30 dark:border-accent-sage/20 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all"
       >
         <div className="flex items-center gap-3 mb-6">
-          <svg className="w-6 h-6 text-accent-primary dark:text-accent-primaryDark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-          </svg>
-          <h3 className="text-xl font-bold text-accent-primary dark:text-accent-primaryDark font-mono">Relevant Coursework</h3>
+          <span className="text-2xl">📚</span>
+          <h3 className="text-xl font-bold text-accent-sage dark:text-accent-sageDark">Relevant Coursework</h3>
         </div>
         <div className="flex flex-wrap gap-3">
           {['Data Structures & Algorithms', 'Database Management System', 'Advanced Calculus'].map(course => (
             <span 
               key={course} 
-              className="px-4 py-2 bg-light-elevated dark:bg-dark-bg/60 text-textLight-secondary dark:text-text-secondary rounded-lg font-mono text-sm border border-border-light dark:border-border-dark hover:border-accent-primary dark:hover:border-accent-primaryDark hover:text-accent-primary dark:hover:text-accent-primaryDark transition-all"
+              className="px-4 py-2 bg-light-elevated dark:bg-dark-bg/60 text-textLight-secondary dark:text-text-secondary rounded-lg text-sm border border-border-light dark:border-border-dark hover:border-accent-sage dark:hover:border-accent-sageDark hover:text-accent-sage dark:hover:text-accent-sageDark transition-all"
             >
               {course}
             </span>
@@ -114,29 +115,29 @@ function SkillCategory({ category, skills, delay, inView }) {
   });
 
   return (
-    <div className="bg-light-card dark:bg-dark-card border border-border-light dark:border-border-dark rounded-xl p-6 hover:border-accent-primary dark:hover:border-accent-primaryDark/30 transition-all duration-300 group shadow-sm hover:shadow-md">
-      <div className="flex items-center gap-2 mb-6 pb-3 border-b border-border-light dark:border-border-dark">
+    <div className="bg-gradient-to-br from-light-elevated to-accent-sand/10 dark:from-dark-card dark:to-accent-primary/5 border border-border-light dark:border-border-dark rounded-2xl p-6 hover:border-accent-sage dark:hover:border-accent-sage/30 transition-all duration-300 group shadow-sm hover:shadow-lg">
+      <div className="flex items-center gap-3 mb-6 pb-3 border-b border-border-light dark:border-border-dark">
         <div className="w-2 h-2 bg-accent-primary dark:bg-accent-primaryDark rounded-full group-hover:animate-pulse"></div>
-        <h3 className="text-lg font-bold text-textLight-heading dark:text-text-heading font-mono">
+        <h3 className="text-lg font-bold text-textLight-heading dark:text-text-heading">
           {category}
         </h3>
       </div>
-      
+
       <div className="grid grid-cols-2 gap-4">
         {trail.map((style, idx) => (
           <animated.div
             key={skills[idx].name}
             style={style}
-            className="flex flex-col items-center p-3 rounded-lg bg-light-elevated dark:bg-dark-bg/40 hover:bg-light-bg dark:hover:bg-dark-elevated transition-all group/item cursor-pointer"
+            className="flex flex-col items-center p-3 rounded-xl bg-light-bg dark:bg-dark-bg/40 hover:bg-accent-sand/20 dark:hover:bg-accent-sage/10 transition-all group/item cursor-pointer"
           >
             <div className="w-12 h-12 mb-2 flex items-center justify-center group-hover/item:scale-110 transition-transform">
               <img
                 src={skills[idx].logo}
                 alt={skills[idx].name}
-                className="w-full h-full object-contain transition-all"
+                className="w-full h-full object-contain"
               />
             </div>
-            <span className="text-textLight-secondary dark:text-text-secondary text-xs font-mono text-center group-hover/item:text-accent-primary dark:group-hover/item:text-accent-primaryDark transition-colors">
+            <span className="text-textLight-secondary dark:text-text-secondary text-xs text-center group-hover/item:text-accent-primary dark:group-hover/item:text-accent-primaryDark transition-colors font-medium">
               {skills[idx].name}
             </span>
           </animated.div>

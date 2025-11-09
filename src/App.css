@@ -1,43 +1,61 @@
-
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* Hide scrollbar for horizontal scroll on mobile */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Animation for wave emoji */
+@keyframes wave {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(20deg); }
+  75% { transform: rotate(-10deg); }
 }
 
-.card {
-  padding: 2em;
+.animate-wave {
+  animation: wave 2s ease-in-out infinite;
+  transform-origin: 70% 70%;
+  display: inline-block;
 }
 
-.read-the-docs {
-  color: #888;
+/* Slick carousel custom styling */
+.projects-carousel .slick-slide {
+  transition: all 0.3s ease;
+}
+
+.projects-carousel .slick-center {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.projects-carousel .slick-slide:not(.slick-center) {
+  transform: scale(0.9);
+  opacity: 0.5;
+}
+
+.slick-dots li button:before {
+  color: #81B29A !important;
+  opacity: 0.25;
+}
+
+.slick-dots li.slick-active button:before {
+  color: #D97757 !important;
+  opacity: 1;
+}
+
+/* Dark mode dots */
+.dark .slick-dots li button:before {
+  color: #9AC3AD !important;
+}
+
+.dark .slick-dots li.slick-active button:before {
+  color: #E8956F !important;
 }
